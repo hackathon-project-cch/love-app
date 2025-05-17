@@ -1,0 +1,64 @@
+version: "3.9"
+
+x-common-env: &common_env
+  DB_USER: ${DB_USER}
+  DB_PASS: ${DB_PASS}
+  DB_NAME: ${DB_NAME}
+  DB_HOST: ${DB_HOST:-db}
+  DB_PORT: ${DB_PORT:-5432}
+
+services:
+  # ────────────────────────────────
+  db:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASS}
+      MYSQL_DATABASE:     ${DB_NAME}
+      MYSQL_USER:         ${DB_USER}
+      MYSQL_PASSWORD:     ${DB_PASS}
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./db/init:/docker-entrypoint-initdb.d   # ← SQL 初期化スクリプトを置く
+    ports:
+      - "3306:3306"     # 外部公開したくなければ削除OK
+
+  # ────────────────────────────────
+  web:
+    build:
+      context: .              # ← ルートをコンテキストに
+      dockerfile: web/Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - ./web:/app
+    ports:
+      - "${WEB_PORT}:${WEB_PORT}"
+    depends_on:
+      - db
+
+  # ────────────────────────────────
+  api:
+    build:
+      context: .              # ← ルートをコンテキストに
+      dockerfile: api/Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - ./api:/app
+    expose:
+      - "8000"
+    depends_on:
+      - db
+
+  # ────────────────────────────────
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "80:80"
+    depends_on: [web, api]
+
+volumes:
+  db_data:
