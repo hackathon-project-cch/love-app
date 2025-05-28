@@ -1,37 +1,23 @@
-import os
-from flask import Flask, render_template, request, redirect, url_for
-from dotenv import load_dotenv
+from flask import Flask, request, jsonify
+from flask_cors import CORS  # Flutterからのリクエストを許可する
 
-load_dotenv()
-
-WEB_PORT = int(os.getenv("WEB_PORT", 3000))
-
-app = Flask(
-    __name__,
-    # どこをテンプレート（HTML）として読むか
-    template_folder="views",
-    # どこを静的ファイル（CSS/画像等）として公開するか
-    static_folder="views",
-    # 静的ファイルはルート直下 (/style.css) にマウント
-    static_url_path=""
-)
-
-@app.route("/", methods=["GET"])
-def login_page():
-    return render_template("login.html", title="ログイン")
-
-@app.route("/login", methods=["POST"])
-def do_login():
-    # 認証処理…
-    return redirect(url_for("dashboard_page"))
-
-@app.route("/dashboard", methods=["GET"])
-def dashboard_page():
-    return render_template("dashboard.html", user="Guest")
+app = Flask(__name__)
+CORS(app)  # フロントエンドからのCORSリクエストを許可
 
 @app.route("/api/hello", methods=["GET"])
 def hello_api():
-    return {"message": "hello from Web-Flask"}
+    return jsonify({"message": "hello from Flask"})
+
+@app.route("/api/login", methods=["POST"])
+def login_api():
+    data = request.json
+    username = data.get("username")
+    password = data.get("password")
+
+    if username == "admin" and password == "secret":
+        return jsonify({"status": "success", "user": username})
+    else:
+        return jsonify({"status": "error", "message": "Invalid credentials"}), 401
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=WEB_PORT, debug=True)
+    app.run(host="0.0.0.0", port=3000, debug=True)
