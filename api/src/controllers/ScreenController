@@ -1,0 +1,55 @@
+from flask import Flask, render_template, request, redirect, session, url_for
+from db import insertUser, authenticate_user, getHairstyle
+from face_analysis import detect_face_shape  # 顔型抽出用の独立クラス（りょうまから送られる顔型のやつ)
+import os
+
+app = Flask(__name__)
+app.secret_key = 'your_secret_key'
+
+# ログイン画面
+@app.route('/', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        user_id = request.form['user_id']
+        password = request.form['password']
+        name = authenticate_user(user_id, password)
+        if name:
+            session['user_id'] = user_id
+            session['name'] = name
+            return redirect(url_for('upload'))
+        else:
+            return render_template('login.html', error='ログイン情報が間違っています')
+    return render_template('login.htmll')
+
+# 新規登録画面
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        user_id = request.form['user_id']
+        name = request.form['name']
+        password = request.form['password']
+        insertUser(user_id, name, password)
+        return redirect(url_for('login'))
+    return render_template('register.html')
+
+# 画像アップロード画面
+@app.route('/upload', methods=['GET', 'POST'])
+def upload():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    if request.method == 'POST':
+        file = request.files['image']
+        if file:
+            face_shape = detect_face_shape(file)  # 顔型を分析する関数（りょうまのやつね）
+            hairstyle, image_path = getHairstyle(face_shape)
+            return render_template('result.html', hairstyle=hairstyle, image_path=image_path, face_shape=face_shape)
+    return render_template('upload.html')
+
+# ログアウト機能
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('login'))
+
+if __name__ == '__main__':
+    app.run(debug=True)
