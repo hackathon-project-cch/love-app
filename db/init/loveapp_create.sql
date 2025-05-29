@@ -16,6 +16,7 @@
 -- Table structure for table `FaceShapes`
 /*!40101 SET @saved_cs_client = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
+USE loveapp;
 CREATE TABLE IF NOT EXISTS `FaceShapes` (
   `face_shape_id` varchar(36) NOT NULL,
   `face_shape_name` varchar(50) NOT NULL,

@@ -21,13 +21,14 @@ def createConnection():
     
 #登録情報をデータベースに登録するプログラム
 def insertUser(user_id, name, password):
-    connection = createConnection()
-    cursor = connection.cursor()
+    connection = createConnection()#データベースの接続
+    cursor = connection.cursor()  #データベースにSQL命令を出すためのオブジェクト
 
     try:
+        
         sql = "INSERT INTO users (user_id, name, password) VALUES (%s, %s, %s)"
-        cursor.execute(sql, (user_id, name, password))
-        connection.commit()
+        cursor.execute(sql, (user_id, name, password)) #VALUES (%s, %s, %s)に値を入れている
+        connection.commit()#sqlを実行
     except mysql.connector.Error as err:
         print("エラー:", err)
     finally:
@@ -36,16 +37,15 @@ def insertUser(user_id, name, password):
 
 #ログイン情報を照合するプログラム
 def authenticate_user(user_id, password):
-    connection = createConnection()
+    connection = createConnection()#データベースの接続
     if not connection:
         return None
-
-    cursor = connection.cursor(dictionary=True)
+    cursor = connection.cursor(dictionary=True) #SQLの実行結果を辞書型（dict型）で受け取れるようにする
 
     try:
         sql = "SELECT user_name FROM Users WHERE user_id = %s AND password = %s"
-        cursor.execute(sql, (user_id, password))
-        result = cursor.fetchone()
+        cursor.execute(sql, (user_id, password)) #　%sに代入
+        result = cursor.fetchone() #SQLの実行結果の中から「最初の1行だけ」を取り出す
 
         if result:
             return result['name']  # 名前を返す
@@ -63,13 +63,13 @@ def authenticate_user(user_id, password):
     
 #顔型から髪型を返すプログラム
 def getHairstyle(face_shape):
-    connection = createConnection()
+    connection = createConnection()#データベースの接続
     
     if connection is None:
         return None, None  # 接続できなかった場合
 
     try:
-        cursor = connection.cursor(dictionary=True)  # 結果を辞書形式で取得
+        cursor = connection.cursor(dictionary=True) #SQLの実行結果を辞書型（dict型）で受け取れるようにする
         query = """
             SELECT
             h.hairstyle_name,    -- 髪型の名前
