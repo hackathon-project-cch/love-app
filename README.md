@@ -1,3 +1,4 @@
+Welcome to the love-app wiki!
 # ハッカソンローカル開発環境セットアップ手順
 
 
@@ -48,7 +49,7 @@ python -m venv .venv
 pip install --upgrade pip
 pip install -r requirements.txt
 ```
-
+**開発を行う時は必ず仮想環境に入ってから作業をしよう！**
 > venv を抜けるときは `deactivate`。
 ---
 
@@ -56,15 +57,28 @@ pip install -r requirements.txt
 
 開発サーバー群（db / nginx / web / api）はすべて run.sh にまとめてあります。ホスト OS でも venv 有効化後でも、以下 1 行で OK です。
 
+
+### Docker Desktopを立ち上げる
+特にノリカス
+
+### 仮想環境に入る
 ```bash
-# 起動（ビルド込み）
-./run.sh start
+. .venv\Scripts\Activate.ps1
+```
 
-# ログを見る
-./run.sh logs
+### 起動
+```bash
+docker compose up -d --build
+```
 
-# 停止
-./run.sh stop
+### ログを見る
+```bash
+docker compose ps
+```
+
+### 停止
+```bash
+docker compose down
 ```
 
 ブラウザ確認:
@@ -72,7 +86,10 @@ pip install -r requirements.txt
 * Web → [http://localhost](http://localhost)
 * API(まだアクセスしても何もない) → [http://localhost:8000](http://localhost:8000)
 
-
+* もしURLを開いても何も表示されなかったら、以下のコマンドを実行して、サーバーが4つ起動しているか確認してください。もし起動していなかったら#質問チャンネルまで！
+```bash
+docker compose ps
+```
 ---
 
 ## 6. フォルダー構成と役割
@@ -108,37 +125,25 @@ love-app/
 **なので自信ない人はブランチ作らないでください！**
 
 ```bash
-# 1) 最新 develop を取得
-git checkout develop && git pull
+ # ──【1. 作業ブランチを最新化して作業＋プッシュ】─────────────
+  git fetch origin
+  git checkout Dev-kota
+  git merge origin/develop           # develop の最新を取り込む
+　git push origin Dev-kota           # リモートにプッシュ
+  # …ここでコーディング作業
+  git add .                          # 変更をステージ
+  git commit -m "コメント"            # 作業内容をコミット
+  git push origin Dev-kota           # リモートにプッシュ
 
-# 2) 個人ブランチを切る
-git switch -c feature/<yourname>/<topic>
-
-# 3) コードを書いて動作確認（./run.sh start → ブラウザ確認）
-
-# 4) コミット & プッシュ
-git add .
-git commit -m "〇〇機能実装"
-git push -u origin feature/<yourname>/<topic>
-
-# 5) GitHub で PR を develop へ → レビュー → Squash Merge
-
-# 6) 最新 develop を pull
-git checkout develop && git pull
+  # ──【2. develop へ切り替え＆プルリクエスト】────────────────────────
+  GitHub上からプルリクエストを作成(create pull request)
+  into Dev-kota → from Developで経路を指定
+  @reiyaに承認してもらってください
 ```
 
-> **原則** : `main` へ直接 push しない。常に `feature → develop → main` の順で統合します。
+> **原則** : `main` へ直接 push しない。プッシュする時は必ずブランチを確認！！
 
 ---
 
-## 8. よくあるトラブルシューティング
-
-| 症状                            | 対処                                                                 |
-| ----------------------------- | ------------------------------------------------------------------ |
-| VScodeのターミナル で `.venv` が有効化できない | `Set-ExecutionPolicy Bypass -Scope Process` を実行                    |
-| Port 3306 が既に使われている           | `.env` の `DB_PORT` を 3307 など空きポートに変更し `docker compose up -d db`    |
-| 依存追加したのに反映されない                | `pip install -r requirements.txt` を再実行／`docker compose up -d` をし直す |
-
----
 
 これでローカル venv + Docker の開発環境を誰でも再現できます。困ったら #質問 まで！
