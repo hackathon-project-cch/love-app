@@ -5,9 +5,10 @@ import 'dart:html' as html;
 import 'package:google_fonts/google_fonts.dart';
 
 void main() {
-  runApp(const LoveApp());
+  runApp(const LoveApp()); // アプリ起動
 }
 
+// アプリ全体のルートWidget
 class LoveApp extends StatelessWidget {
   const LoveApp({super.key});
 
@@ -21,11 +22,12 @@ class LoveApp extends StatelessWidget {
         textTheme: GoogleFonts.poppinsTextTheme(),
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.pinkAccent),
       ),
-      home: const LoginPage(),
+      home: const LoginPage(), // 最初に表示される画面
     );
   }
 }
 
+// ログインページ
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -34,23 +36,24 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  String message = "";
+  String message = ""; // ログイン後のメッセージ表示用
 
-  // ログイン処理を行う関数
+  // ログイン処理（固定ユーザー認証）
   void login() async {
-    final url = Uri.parse("http://100.64.1.43:3000/api/login");
+    final url = Uri.parse("http://100.64.1.54:3000/api/login");
     final response = await http.post(
       url,
       headers: {"Content-Type": "application/json"},
       body: json.encode({"username": "admin", "password": "secret"}),
     );
 
+    // レスポンスメッセージを表示
     setState(() {
       final data = json.decode(response.body);
       message = data["message"] ?? "Login success!";
     });
 
-    // ログイン成功で画像アップロードページへ遷移
+    // ステータス200であればUploadPageへ遷移
     if (response.statusCode == 200) {
       Navigator.push(
         context,
@@ -63,6 +66,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        // グラデーション背景
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [Colors.pinkAccent, Colors.deepPurpleAccent],
@@ -74,7 +78,7 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // アプリ名の表示
+              // アプリタイトル表示
               Text(
                 "LoveApp",
                 style: GoogleFonts.pacifico(
@@ -111,6 +115,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 }
 
+// 画像アップロード画面
 class UploadPage extends StatefulWidget {
   const UploadPage({super.key});
 
@@ -120,10 +125,10 @@ class UploadPage extends StatefulWidget {
 
 class _UploadPageState extends State<UploadPage> {
   String status = ""; // アップロードステータスメッセージ
-  html.File? selectedFile; // 選択されたファイル
-  String? imageUrl; // プレビュー画像用のURL
+  html.File? selectedFile; // 選択された画像ファイル
+  String? imageUrl; // 画像プレビュー表示用のURL
 
-  // ファイル選択＋プレビュー＋アップロード処理
+  // ファイル選択・プレビュー表示
   void pickAndPreviewFile() async {
     final uploadInput = html.FileUploadInputElement()..accept = 'image/*';
     uploadInput.click(); // ファイル選択ダイアログを開く
@@ -132,19 +137,19 @@ class _UploadPageState extends State<UploadPage> {
       final file = uploadInput.files!.first;
       final reader = html.FileReader();
 
-      reader.readAsDataUrl(file); // データURLとして読み込み（プレビュー用）
+      reader.readAsDataUrl(file); // プレビュー用にBase64形式で読み込む
 
       reader.onLoadEnd.listen((event) {
         setState(() {
           selectedFile = file;
-          imageUrl = reader.result as String; // 画像のプレビューURLを保存
-          status = ""; // ステータス初期化
+          imageUrl = reader.result as String;
+          status = ""; // ステータスを初期化
         });
       });
     });
   }
 
-  // アップロード実行処理
+  // 選択されたファイルをFlaskへPOST送信
   void uploadFile() async {
     if (selectedFile == null) return;
 
@@ -153,15 +158,36 @@ class _UploadPageState extends State<UploadPage> {
 
     final request = html.HttpRequest();
     request
-      ..open('POST', 'http://100.64.1.43:3000/api/upload')
-      ..onLoadEnd.listen((e) {
+      ..open('POST', 'http://100.64.1.54:3000/api/upload')
+      ..onLoadEnd.listen((e) async {
         setState(() {
           status = request.status == 200
               ? "\u2728 アップロード成功！"
               : "\u274C アップロード失敗";
         });
+
+        // アップロード成功時におすすめ画像を取得
+        if (request.status == 200) {
+          final response = await http.get(Uri.parse("http://100.64.1.54:3000/api/get_sample_image"));
+          if (response.statusCode == 200) {
+            final data = json.decode(response.body);
+            final sampleImageUrl = data["image_url"];
+            final recommendation = data["recommendation"];
+
+            // 結果ページに遷移
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ResultPage(
+                  imageUrl: sampleImageUrl,
+                  recommendation: recommendation,
+                ),
+              ),
+            );
+          }
+        }
       })
-      ..send(formData); // フォームデータを送信
+      ..send(formData); // リクエスト送信
   }
 
   @override
@@ -172,19 +198,19 @@ class _UploadPageState extends State<UploadPage> {
         backgroundColor: Colors.white,
         foregroundColor: Colors.pinkAccent,
         elevation: 0,
-        title: const Text("LoveApp - Upload Image"),
+        title: const Text("LoveApp - Best Hair スタイリスト"),
       ),
       body: Center(
         child: Card(
           elevation: 8,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
           margin: const EdgeInsets.all(24),
           child: Padding(
             padding: const EdgeInsets.all(32),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                // 見出し
                 Text(
                   "画像を選択してアップロード",
                   style: Theme.of(context)
@@ -212,7 +238,7 @@ class _UploadPageState extends State<UploadPage> {
 
                 const SizedBox(height: 16),
 
-                // プレビュー画像の表示
+                // プレビュー画像とアップロードボタン
                 if (imageUrl != null)
                   Column(
                     children: [
@@ -243,7 +269,7 @@ class _UploadPageState extends State<UploadPage> {
 
                 const SizedBox(height: 20),
 
-                // アップロードステータスの表示（アニメーション付き）
+                // ステータス表示（アニメーション付き）
                 AnimatedSwitcher(
                   duration: const Duration(milliseconds: 500),
                   child: Text(
@@ -257,6 +283,65 @@ class _UploadPageState extends State<UploadPage> {
                     ),
                   ),
                 )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// 結果表示ページ（おすすめの髪型と画像を表示）
+class ResultPage extends StatelessWidget {
+  final String imageUrl;       // 画像のURL
+  final String recommendation; // おすすめメッセージ
+
+  const ResultPage({
+    super.key,
+    required this.imageUrl,
+    required this.recommendation,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.pink[50],
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.pinkAccent,
+        title: const Text("おすすめの髪型"),
+        elevation: 0,
+      ),
+      body: Center(
+        child: Card(
+          elevation: 8,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          margin: const EdgeInsets.all(24),
+          child: Padding(
+            padding: const EdgeInsets.all(32),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // 画像表示
+                if (imageUrl.isNotEmpty)
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: Image.network(
+                      imageUrl,
+                      height: 200,
+                    ),
+                  ),
+                const SizedBox(height: 24),
+                // 推奨コメント
+                Text(
+                  recommendation,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        color: Colors.deepPurple,
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
               ],
             ),
           ),

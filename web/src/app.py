@@ -62,6 +62,18 @@ def upload():
     # 成功レスポンスを返す
     return jsonify({"message": "File uploaded"}), 200
 
+@app.route("/api/get_sample_image", methods=["GET"])
+@cross_origin()
+def get_sample_image():
+    image_path = "static/diamond_shaped_short_cut.jpg"  # あらかじめ用意した画像
+    full_url = request.host_url.rstrip('/') + '/' + image_path
+
+    return jsonify({
+        "image_url": full_url,
+        "recommendation": "あなたにおすすめの髪型はショートボブです"
+    })
+
+
 # アプリケーションのエントリーポイント
 if __name__ == "__main__":
     # アプリを起動（ホスト0.0.0.0で外部アクセス可能、ポート3000）
