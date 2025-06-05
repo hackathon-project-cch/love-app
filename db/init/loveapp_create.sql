@@ -97,3 +97,29 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2025-05-28  0:04:58
+LOCK TABLES `FaceShapes` WRITE;
+/*!40000 ALTER TABLE `FaceShapes` DISABLE KEYS */;
+INSERT INTO `FaceShapes` VALUES ('1','丸顔'),('2','面長'),('3','ホームベース型'),('4','卵型'),('5','逆三角形');
+/*!40000 ALTER TABLE `FaceShapes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+LOCK TABLES `Hairstyles` WRITE;
+/*!40000 ALTER TABLE `Hairstyles` DISABLE KEYS */;
+INSERT INTO `Hairstyles` VALUES ('1','ツーブロック','/images/two_block_cut.jpg'),('10','アップバングミディアムショート','/images/up_bang_midium_cut.jpg'),('11','ウルフ','/images/wolf_cut.jpg'),('12','ハイレイヤーショート','/images/high_layered_short_cut.jpg'),('2','ソフトモヒカン','/images/soft_mohawk.jpg'),('3','マッシュ','/images/mash_cut.jpg'),('4','無造作パーマ','/images/messy_perm.jpg'),('5','ベリーショート','/images/very_short_cut.jpg'),('6','フェードカット','/images/fade_cut.jpg'),('7','ショートレイヤー','/images/short_layered_cut.jpg'),('8','アップバング','/images/up_bang_short_cut.jpg'),('9','ひし形ショート','/images/diamond_shaped_short_cut.jpg');
+/*!40000 ALTER TABLE `Hairstyles` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+LOCK TABLES `FaceShape_Hairstyle` WRITE;
+/*!40000 ALTER TABLE `FaceShape_Hairstyle` DISABLE KEYS */;
+INSERT INTO `FaceShape_Hairstyle` VALUES ('1','1','1'),('2','1','2'),('3','2','3'),('4','2','4'),('5','3','5'),('6','3','6'),('7','3','7'),('8','4','1'),('9','4','8'),('10','4','9'),('11','5','10'),('12','5','11'),('13','5','12');
+/*!40000 ALTER TABLE `FaceShape_Hairstyle` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+INSERT INTO loveapp.Users (user_id, user_name, password) VALUES
+('a001', 'alice', 'password123'),
+('b002', 'bob', 'securepass456'),
+('c003', 'charlie', 'qwerty789'),
+('d004', 'david', 'litemein321'),
+('e005', 'eve', 'mypassword999');
