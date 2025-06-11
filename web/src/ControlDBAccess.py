@@ -1,5 +1,6 @@
 import mysql.connector
 from mysql.connector import Error
+
 #データベースの接続
 def createConnection():
     try:

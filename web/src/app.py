@@ -1,7 +1,9 @@
 from flask import Flask, request, jsonify  # Flaskの基本モジュールをインポート
 from flask_cors import CORS, cross_origin  # CORS対応用のモジュール
 from werkzeug.utils import secure_filename  # ファイル名を安全に処理するための関数
-import os  # OS操作のための標準モジュール
+import os # OS操作のための標準モジュール
+
+from ControlDBAccess import getHairstyle  # ヘアスタイル取得のための関数をインポート
 
 # Flaskアプリケーションを初期化
 app = Flask(__name__)
@@ -65,12 +67,15 @@ def upload():
 @app.route("/api/get_sample_image", methods=["GET"])
 @cross_origin()
 def get_sample_image():
-    image_path = "static/diamond_shaped_short_cut.jpg"  # あらかじめ用意した画像
-    full_url = request.host_url.rstrip('/') + '/' + image_path
-
+    face_shape = "丸顔"  # 例として丸顔を指定
+    hairstyle, result_image_path = getHairstyle(face_shape)
+    #full_url = request.host_url.rstrip('/') + '/' + result_image_path
+    print(f"✅ 髪型: {hairstyle}, 画像パス: {result_image_path}")
+    
     return jsonify({
-        "image_url": full_url,
-        "recommendation": "あなたにおすすめの髪型はショートボブです"
+        #"image_url": full_url,
+        #"recommendation": f"あなたにおすすめの髪型は{hairstyle}です"
+        "recommendation": f"あなたにおすすめの髪型はです"
     })
 
 
