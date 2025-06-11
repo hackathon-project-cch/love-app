@@ -105,7 +105,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `Hairstyles` WRITE;
 /*!40000 ALTER TABLE `Hairstyles` DISABLE KEYS */;
-INSERT INTO `Hairstyles` VALUES ('1','ツーブロック','/images/two_block_cut.jpg'),('10','アップバングミディアムショート','/images/up_bang_midium_cut.jpg'),('11','ウルフ','/images/wolf_cut.jpg'),('12','ハイレイヤーショート','/images/high_layered_short_cut.jpg'),('2','ソフトモヒカン','/images/soft_mohawk.jpg'),('3','マッシュ','/images/mash_cut.jpg'),('4','無造作パーマ','/images/messy_perm.jpg'),('5','ベリーショート','/images/very_short_cut.jpg'),('6','フェードカット','/images/fade_cut.jpg'),('7','ショートレイヤー','/images/short_layered_cut.jpg'),('8','アップバング','/images/up_bang_short_cut.jpg'),('9','ひし形ショート','/images/diamond_shaped_short_cut.jpg');
+INSERT INTO `Hairstyles` VALUES ('1','ツーブロック','web/src/static/two_block_cut.jpg'),('10','アップバングミディアムショート','web/src/static/up_bang_midium_cut.jpg'),('11','ウルフ','web/src/static/wolf_cut.jpg'),('12','ハイレイヤーショート','web/src/static/high_layered_short_cut.jpg'),('2','ソフトモヒカン','web/src/static/soft_mohawk.jpg'),('3','マッシュ','web/src/static/mash_cut.jpg'),('4','無造作パーマ','web/src/static/messy_perm.jpg'),('5','ベリーショート','web/src/static/very_short_cut.jpg'),('6','フェードカット','web/src/static/fade_cut.jpg'),('7','ショートレイヤー','web/src/static/short_layered_cut.jpg'),('8','アップバング','web/src/static/up_bang_short_cut.jpg'),('9','ひし形ショート','web/src/static/diamond_shaped_short_cut.jpg');
 /*!40000 ALTER TABLE `Hairstyles` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
