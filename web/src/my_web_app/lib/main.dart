@@ -40,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
 
   // ログイン処理（固定ユーザー認証）
   void login() async {
-    final url = Uri.parse("http://192.0.0.2:3000/api/login");
+    final url = Uri.parse("http://127.0.0.1:3000/api/login");
     final response = await http.post(
       url,
       headers: {"Content-Type": "application/json"},
@@ -158,7 +158,7 @@ class _UploadPageState extends State<UploadPage> {
 
     final request = html.HttpRequest();
     request
-      ..open('POST', 'http://192.0.0.2:3000/api/upload')
+      ..open('POST', 'http://127.0.0.1:3000/api/upload')
       ..onLoadEnd.listen((e) async {
         setState(() {
           status = request.status == 200
@@ -168,7 +168,7 @@ class _UploadPageState extends State<UploadPage> {
 
         // アップロード成功時におすすめ画像を取得
         if (request.status == 200) {
-          final response = await http.get(Uri.parse("http://192.0.0.2:3000/api/get_sample_image"));
+          final response = await http.get(Uri.parse("http://127.0.0.1:3000/api/get_sample_image"));
           if (response.statusCode == 200) {
             final data = json.decode(response.body);
             final sampleImageUrl = data["image_url"];
