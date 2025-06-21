@@ -15,7 +15,8 @@
 
 -- Table structure for table `FaceShapes`
 /*!40101 SET @saved_cs_client = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+/*!50503 SET NAMES utf8mb4 */;
+
 USE loveapp;
 CREATE TABLE IF NOT EXISTS `FaceShapes` (
   `face_shape_id` varchar(36) NOT NULL,
@@ -99,13 +100,26 @@ UNLOCK TABLES;
 -- Dump completed on 2025-05-28  0:04:58
 LOCK TABLES `FaceShapes` WRITE;
 /*!40000 ALTER TABLE `FaceShapes` DISABLE KEYS */;
-INSERT INTO `FaceShapes` VALUES ('1','丸顔'),('2','面長'),('3','ホームベース型'),('4','卵型'),('5','逆三角形');
+INSERT INTO `FaceShapes` VALUES ('1','Round'),('2','Long'),('3','Square'),('4','Oval'),('5','Inverted Triangle');
 /*!40000 ALTER TABLE `FaceShapes` ENABLE KEYS */;
 UNLOCK TABLES;
 
 LOCK TABLES `Hairstyles` WRITE;
 /*!40000 ALTER TABLE `Hairstyles` DISABLE KEYS */;
-INSERT INTO `Hairstyles` VALUES ('1','ツーブロック','web/src/static/two_block_cut.jpg'),('10','アップバングミディアムショート','web/src/static/up_bang_midium_cut.jpg'),('11','ウルフ','web/src/static/wolf_cut.jpg'),('12','ハイレイヤーショート','web/src/static/high_layered_short_cut.jpg'),('2','ソフトモヒカン','web/src/static/soft_mohawk.jpg'),('3','マッシュ','web/src/static/mash_cut.jpg'),('4','無造作パーマ','web/src/static/messy_perm.jpg'),('5','ベリーショート','web/src/static/very_short_cut.jpg'),('6','フェードカット','web/src/static/fade_cut.jpg'),('7','ショートレイヤー','web/src/static/short_layered_cut.jpg'),('8','アップバング','web/src/static/up_bang_short_cut.jpg'),('9','ひし形ショート','web/src/static/diamond_shaped_short_cut.jpg');
+INSERT INTO Hairstyles VALUES 
+('1','Two Block','two_block_cut.jpg'),
+('10','Up Bang Medium Short','up_bang_midium_cut.jpg'),
+('11','Wolf Cut','wolf_cut.jpg'),
+('12','High Layered Short','high_layered_short_cut.jpg'),
+('2','Soft Mohawk','soft_mohawk.jpg'),
+('3','Mushroom Cut','mash_cut.jpg'),
+('4','Messy Perm','messy_perm.jpg'),
+('5','Very Short','very_short_cut.jpg'),
+('6','Fade Cut','fade_cut.jpg'),
+('7','Short Layered','short_layered_cut.jpg'),
+('8','Up Bang','up_bang_short_cut.jpg'),
+('9','Diamond-Shaped Short','diamond_shaped_short_cut.jpg');
+
 /*!40000 ALTER TABLE `Hairstyles` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

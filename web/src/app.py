@@ -67,15 +67,15 @@ def upload():
 @app.route("/api/get_sample_image", methods=["GET"])
 @cross_origin()
 def get_sample_image():
-    face_shape = "丸顔"  # 例として丸顔を指定
+    face_shape = "Round"  # 例として丸顔を指定
     hairstyle, result_image_path = getHairstyle(face_shape)
-    #full_url = request.host_url.rstrip('/') + '/' + result_image_path
+    
+    full_url = request.host_url.rstrip('/') + '/static/' + result_image_path
     print(f"✅ 髪型: {hairstyle}, 画像パス: {result_image_path}")
     
     return jsonify({
-        #"image_url": full_url,
-        #"recommendation": f"あなたにおすすめの髪型は{hairstyle}です"
-        "recommendation": f"あなたにおすすめの髪型はです"
+        "image_url": full_url,
+        "recommendation": f"あなたにおすすめの髪型は{hairstyle}です"
     })
 
 

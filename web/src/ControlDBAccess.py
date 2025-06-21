@@ -8,9 +8,13 @@ def createConnection():
             host='db',
             database='loveapp',
             user='loveuser',
-            password='lovepass'
+            password='lovepass',
+            charset='utf8mb4',
+            use_unicode=True
         )
+        #connection.set_charset_collation('utf8mb4','utf8mb4_unicode_ci')
         if connection.is_connected():
+            #connection.set_charset_collation('utf8mb4')  # ←追加！
             return connection
         else:
             print("データベース接続に失敗しました。")
@@ -84,10 +88,24 @@ def getHairstyle(face_shape):
             WHERE
             fs.face_shape_name = %s
             """
+        # query = """
+        # SELECT
+        #     fs.face_shape_id,
+        #     fs.face_shape_name
+        # FROM
+        #     loveapp.FaceShapes AS fs
+        # """
+
         cursor.execute(query, (face_shape,))
+        print("2:",face_shape)
         result = cursor.fetchone()  # 顔型にマッチするデータを1件取得
+        
+       # 必要に応じて読み残しを回収
+        while cursor.nextset():
+            pass
 
         if result:
+            print("3:",result)
             hairstyle = result['hairstyle_name']
             image_path = result['hair_image_path']
             return hairstyle, image_path
