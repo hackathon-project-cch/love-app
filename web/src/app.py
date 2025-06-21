@@ -67,7 +67,7 @@ def upload():
 @app.route("/api/get_sample_image", methods=["GET"])
 @cross_origin()
 def get_sample_image():
-    face_shape = "Round"  # 例として丸顔を指定
+    face_shape = "丸顔"  # 例として丸顔を指定
     hairstyle, result_image_path = getHairstyle(face_shape)
     
     full_url = request.host_url.rstrip('/') + '/static/' + result_image_path

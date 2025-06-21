@@ -12,7 +12,7 @@ def createConnection():
             charset='utf8mb4',
             use_unicode=True
         )
-        #connection.set_charset_collation('utf8mb4','utf8mb4_unicode_ci')
+        connection.set_charset_collation('utf8mb4', 'utf8mb4_unicode_ci')
         if connection.is_connected():
             #connection.set_charset_collation('utf8mb4')  # ←追加！
             return connection
