@@ -5,13 +5,13 @@ from pathlib import Path
 
 # ファイル自体が関数になっている
 
-def faceSearch(path):
+def faceSearch(file_path):
     load_dotenv()
     api_key = os.getenv("AI_API_KEY")
 
     client = genai.Client(api_key=api_key)
     
-    image_path = Path(path)
+    image_path = Path(file_path)
     uploaded_file = client.files.upload(file=image_path)
 
     response = client.models.generate_content(

@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify  # Flaskの基本モジュールをイ
 from flask_cors import CORS, cross_origin  # CORS対応用のモジュール
 from werkzeug.utils import secure_filename  # ファイル名を安全に処理するための関数
 import os # OS操作のための標準モジュール
-from faiceai import main
+from faceai import main
 from ControlDBAccess import getHairstyle  # ヘアスタイル取得のための関数をインポート
 
 # Flaskアプリケーションを初期化
