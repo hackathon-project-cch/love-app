@@ -7,7 +7,7 @@ from pathlib import Path
 
 def main():
     load_dotenv()
-    api_key = os.getenv("AI_API_KEY")
+    api_key = os.getenv("AI_API_KE")
 
     client = genai.Client(api_key=api_key)
 
