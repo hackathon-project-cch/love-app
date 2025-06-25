@@ -1,3 +1,4 @@
+from dotenv import load_dotenv
 import os
 from google import genai
 from pathlib import Path
@@ -5,11 +6,12 @@ from pathlib import Path
 # ファイル自体が関数になっている
 
 def main():
-    api_key = "AIzaSyANbnQZ2BOYx_2aNKTufTY8VdHVbQ2Z87I"
+    load_dotenv()
+    api_key = os.getenv("AI_API_KEY")
 
     client = genai.Client(api_key=api_key)
 
-    image_path = Path(r"C:\Users\reiya\love-app\web\src\static\soft_mohawk.jpg")
+    image_path = Path(r"/home/reiya/love-app/web/src/static/high_layered_short_cut.jpg")
     uploaded_file = client.files.upload(file=image_path)
 
     response = client.models.generate_content(

@@ -5,7 +5,7 @@
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -15,8 +15,8 @@
 
 -- Table structure for table `FaceShapes`
 /*!40101 SET @saved_cs_client = @@character_set_client */;
-/*!50503 SET NAMES utf8mb4 */;
-
+/*!50503 SET character_set_client = utf8mb4 */;
+SET NAMES utf8mb4;
 USE loveapp;
 CREATE TABLE IF NOT EXISTS `FaceShapes` (
   `face_shape_id` varchar(36) NOT NULL,
@@ -100,25 +100,25 @@ UNLOCK TABLES;
 -- Dump completed on 2025-05-28  0:04:58
 LOCK TABLES `FaceShapes` WRITE;
 /*!40000 ALTER TABLE `FaceShapes` DISABLE KEYS */;
-INSERT INTO `FaceShapes` VALUES ('1','Round'),('2','Long'),('3','Square'),('4','Oval'),('5','Inverted Triangle');
+INSERT INTO `FaceShapes` VALUES ('1','丸顔'),('2','面長'),('3','ホームベース型'),('4','卵型'),('5','逆三角形');
 /*!40000 ALTER TABLE `FaceShapes` ENABLE KEYS */;
 UNLOCK TABLES;
 
 LOCK TABLES `Hairstyles` WRITE;
 /*!40000 ALTER TABLE `Hairstyles` DISABLE KEYS */;
-INSERT INTO Hairstyles VALUES 
-('1','Two Block','two_block_cut.jpg'),
-('10','Up Bang Medium Short','up_bang_midium_cut.jpg'),
-('11','Wolf Cut','wolf_cut.jpg'),
-('12','High Layered Short','high_layered_short_cut.jpg'),
-('2','Soft Mohawk','soft_mohawk.jpg'),
-('3','Mushroom Cut','mash_cut.jpg'),
-('4','Messy Perm','messy_perm.jpg'),
-('5','Very Short','very_short_cut.jpg'),
-('6','Fade Cut','fade_cut.jpg'),
-('7','Short Layered','short_layered_cut.jpg'),
-('8','Up Bang','up_bang_short_cut.jpg'),
-('9','Diamond-Shaped Short','diamond_shaped_short_cut.jpg');
+INSERT INTO `Hairstyles` VALUES
+  ('1','ツーブロック','two_block_cut.jpg'),
+  ('10','アップバングミディアムショート','up_bang_midium_cut.jpg'),
+  ('11','ウルフ','wolf_cut.jpg'),
+  ('12','ハイレイヤーショート','high_layered_short_cut.jpg'),
+  ('2','ソフトモヒカン','soft_mohawk.jpg'),
+  ('3','マッシュ','mash_cut.jpg'),
+  ('4','無造作パーマ','messy_perm.jpg'),
+  ('5','ベリーショート','very_short_cut.jpg'),
+  ('6','フェードカット','fade_cut.jpg'),
+  ('7','ショートレイヤー','short_layered_cut.jpg'),
+  ('8','アップバング','up_bang_short_cut.jpg'),
+  ('9','ひし形ショート','diamond_shaped_short_cut.jpg');
 
 /*!40000 ALTER TABLE `Hairstyles` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -137,3 +137,25 @@ INSERT INTO loveapp.Users (user_id, user_name, password) VALUES
 ('c003', 'charlie', 'qwerty789'),
 ('d004', 'david', 'litemein321'),
 ('e005', 'eve', 'mypassword999');
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+
+UPDATE FaceShapes
+SET face_shape_name = CONVERT(
+    CAST(
+      CONVERT(face_shape_name USING latin1)
+      AS BINARY
+    )
+    USING utf8mb4
+  );
+
+UPDATE Hairstyles
+SET hairstyle_name = CONVERT(
+    CAST(
+      CONVERT(hairstyle_name USING latin1)
+      AS BINARY
+    )
+    USING utf8mb4
+  );
