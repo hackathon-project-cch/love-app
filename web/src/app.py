@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify  # Flaskの基本モジュールをイ
 from flask_cors import CORS, cross_origin  # CORS対応用のモジュール
 from werkzeug.utils import secure_filename  # ファイル名を安全に処理するための関数
 import os # OS操作のための標準モジュール
-
+from faceai import main
 from ControlDBAccess import getHairstyle  # ヘアスタイル取得のための関数をインポート
 
 # Flaskアプリケーションを初期化
@@ -40,6 +40,7 @@ def login_api():
 @app.route("/api/upload", methods=["POST", "OPTIONS"])
 @cross_origin()  # このエンドポイントに対してCORSを許可
 def upload():
+    global file_path
     # リクエストに"file"が含まれていない場合はエラー
     if "file" not in request.files:
         return jsonify({"message": "No file part"}), 400
@@ -67,7 +68,7 @@ def upload():
 @app.route("/api/get_sample_image", methods=["GET"])
 @cross_origin()
 def get_sample_image():
-    face_shape = "丸顔"  # 例として丸顔を指定
+    face_shape = main(file_path)  # 例として丸顔を指定
     hairstyle, result_image_path = getHairstyle(face_shape)
     
     full_url = request.host_url.rstrip('/') + '/static/' + result_image_path
