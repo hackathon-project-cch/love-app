@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify  # Flaskの基本モジュールをイ
 from flask_cors import CORS, cross_origin  # CORS対応用のモジュール
 from werkzeug.utils import secure_filename  # ファイル名を安全に処理するための関数
 import os # OS操作のための標準モジュール
-from faceai import main
+from faceai import faceSearch
 from ControlDBAccess import getHairstyle  # ヘアスタイル取得のための関数をインポート
 
 # Flaskアプリケーションを初期化
@@ -39,6 +39,7 @@ def login_api():
 # ファイルアップロードAPIエンドポイント
 @app.route("/api/upload", methods=["POST", "OPTIONS"])
 @cross_origin()  # このエンドポイントに対してCORSを許可
+
 def upload():
     global file_path
     # リクエストに"file"が含まれていない場合はエラー
@@ -54,8 +55,12 @@ def upload():
 
     # 安全なファイル名に変換して保存パスを設定
     filename = secure_filename(file.filename)
+    
+    if '.' not in filename:
+        filename += ".jpeg"
+    
     file_path = os.path.join(UPLOAD_FOLDER, filename)
-
+    print(f"あああああああああああああああああああああああああ:{file_path}")
     # ファイルを保存
     file.save(file_path)
 
@@ -65,11 +70,16 @@ def upload():
     # 成功レスポンスを返す
     return jsonify({"message": "File uploaded"}), 200
 
+
 @app.route("/api/get_sample_image", methods=["GET"])
 @cross_origin()
 def get_sample_image():
-    face_shape = main(file_path)  # 例として丸顔を指定
+    
+    face_shape = faceSearch(file_path)  # 例として丸顔を指定
+    print(f"あああああああああああああああああ {face_shape} ")
     hairstyle, result_image_path = getHairstyle(face_shape)
+    print(f"いいいいいいいいいいいいいいいいいい{hairstyle}")
+    print(f"ううううううううううううううう{result_image_path}")
     
     full_url = request.host_url.rstrip('/') + '/static/' + result_image_path
     print(f"✅ 髪型: {hairstyle}, 画像パス: {result_image_path}")
@@ -84,3 +94,7 @@ def get_sample_image():
 if __name__ == "__main__":
     # アプリを起動（ホスト0.0.0.0で外部アクセス可能、ポート3000）
     app.run(host="0.0.0.0", port=3000, debug=True)
+
+
+
+
