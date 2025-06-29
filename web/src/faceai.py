@@ -54,6 +54,5 @@ def faceSearch(file_path):
         )
     print(response.text)
     return response.text
-if __name__=="__main__":
-    main()
+
 
