@@ -1,27 +1,48 @@
 import mysql.connector
 from mysql.connector import Error
+import os
 
-#データベースの接続
+#ローカルの場合はこっち
+# #データベースの接続
+# def createConnection():
+#     try:
+#         connection = mysql.connector.connect(
+#             host='db',
+#             database='loveapp',
+#             user='loveuser',
+#             password='lovepass',
+#             charset='utf8mb4',
+#             use_unicode=True
+#         )
+#         connection.set_charset_collation('utf8mb4', 'utf8mb4_unicode_ci')
+#         if connection.is_connected():
+#             #connection.set_charset_collation('utf8mb4')  # ←追加！
+#             return connection
+#         else:
+#             print("データベース接続に失敗しました。")
+#             return None
+#     except Error as e:
+#         print(f"データベース接続エラー: {e}")
+#         return None
+
+#GCP用
 def createConnection():
     try:
         connection = mysql.connector.connect(
-            host='db',
-            database='loveapp',
-            user='loveuser',
-            password='lovepass',
+            user=os.environ.get("DB_USER"),
+            password=os.environ.get("DB_PASS"),
+            database=os.environ.get("DB_NAME"),
+            unix_socket=f'/cloudsql/{os.environ.get("DB_HOST")}',  # 🔴 ここが重要！
             charset='utf8mb4',
             use_unicode=True
         )
-        connection.set_charset_collation('utf8mb4', 'utf8mb4_unicode_ci')
         if connection.is_connected():
-            #connection.set_charset_collation('utf8mb4')  # ←追加！
+            print("✅ Cloud SQL に接続成功")
             return connection
-        else:
-            print("データベース接続に失敗しました。")
-            return None
-    except Error as e:
-        print(f"データベース接続エラー: {e}")
-        return None
+    except Exception as e:
+        print(f"❌ DB接続失敗: {e}")
+    return None
+
     
     
 #登録情報をデータベースに登録するプログラム
@@ -103,7 +124,7 @@ def getHairstyle(face_shape):
        # 必要に応じて読み残しを回収
         while cursor.nextset():
             pass
-
+        print("3:",result)
         if result:
             print("3:",result)
             hairstyle = result['hairstyle_name']
