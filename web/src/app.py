@@ -54,6 +54,7 @@ def login_api():
 @app.route("/api/upload", methods=["POST", "OPTIONS"])
 @cross_origin()
 def upload():
+    global file_path
     if "file" not in request.files:
         return jsonify({"message": "No file part"}), 400
 
@@ -103,7 +104,7 @@ def upload():
 @cross_origin()
 def get_sample_image():
     try:
-        face_shape = "丸顔"
+        face_shape = faceSearch(file_path)
         hairstyle, result_image_path = getHairstyle(face_shape)
 
         if hairstyle is None or result_image_path is None:
