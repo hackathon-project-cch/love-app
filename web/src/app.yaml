@@ -1,7 +1,8 @@
 runtime: python310
 
 
-entrypoint: gunicorn -b :$PORT app:app
+entrypoint: gunicorn -b :$PORT app:app --timeout 60
+
 
 handlers:
   - url: /static
